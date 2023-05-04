@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: postgres-vk
+    image: postgres:15
+    restart: on-failure
+    env_file: .env
+    ports:
+      - 5432:5432
+    volumes:
+      - vk_friends:/var/lib/postgresql/data
+
+  api:
+    container_name: api-vk
+    build: ./backend
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app
+    ports:
+      - 8000:8000
+    command: [ "/app/entrypoint.sh" ]
+    restart: on-failure
+    depends_on:
+      - db
+
+volumes:
+  vk_friends:
