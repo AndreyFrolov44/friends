@@ -4,8 +4,13 @@ from users.models import User
 
 
 class Request(models.Model):
-    from_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='from_user_requests')
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='to_user_requests')
+    is_canceled = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ['from_user', 'to_user']
 
 class Friend(models.Model):
-    pass
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='friends')
+    friends = models.ManyToManyField(User)
