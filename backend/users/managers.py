@@ -14,6 +14,12 @@ class UserManager(BaseUserManager):
 
         user.set_password(password)
         user.save(using=self._db)
+
+        from friends.models import Friend
+
+        f = Friend(user=user)
+        f.save()
+
         return user
 
     def create_user(self, username, password=None, **extra_fields):
