@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
 
-    'users.apps.UsersConfig'
+    'users.apps.UsersConfig',
+    'friends.apps.FriendsConfig'
 ]
 
 REST_FRAMEWORK = {
