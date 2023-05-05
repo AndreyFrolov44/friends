@@ -4,9 +4,6 @@ from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser
 from .managers import UserManager
 
 
-
-
-
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True, unique=True) 
     username = models.CharField(max_length=50, unique=True) 
@@ -17,5 +14,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects =  UserManager()
  
-    def __str__(self):
-        return self.email
