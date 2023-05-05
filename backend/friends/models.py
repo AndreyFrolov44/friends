@@ -3,7 +3,7 @@ from django.db import models
 from users.models import User
 
 
-class Request(models.Model):
+class RequestFriend(models.Model):
     from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='from_user_requests')
     to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='to_user_requests')
     is_canceled = models.BooleanField(default=False)
