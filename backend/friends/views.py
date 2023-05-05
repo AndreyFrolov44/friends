@@ -8,6 +8,7 @@ from rest_framework.response import Response
 
 from .serializers import RequestCreateSerializer
 from .models import RequestFriend
+from .services import RequestFriendServise
 from users.models import User
 
 
@@ -20,9 +21,4 @@ class RequestViewSet(ViewSet):
 
         to_user = get_object_or_404(User, ~Q(id=request.user.id), username=serializer.data['to_username'])
 
-        if RequestFriend.objects.filter(from_user=request.user, to_user=to_user).exists():
-            return Response({"detail": "Request already sent"}, status=status.HTTP_400_BAD_REQUEST)
-
-        request = RequestFriend(from_user=request.user, to_user=to_user)
-        request.save()
-        return Response({"status": "ok"}, status=status.HTTP_201_CREATED)
+        return RequestFriendServise.create(from_user=request.user, to_user=to_user)
