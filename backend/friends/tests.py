@@ -123,3 +123,13 @@ class FriendTest(APITestCase):
                 'from_user': UserSerializer(self.jack).data, 
                 'is_canceled': False
             }])
+        
+    def test_friend_list_success(self):
+        self.jack_sent_tom()
+        self.tom_sent_jack()
+
+        self.client.force_authenticate(self.tom)
+        response = self.client.get(reverse('friend_list'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(json.loads(response.content), [UserSerializer(self.jack).data])
