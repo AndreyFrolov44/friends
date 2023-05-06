@@ -4,9 +4,10 @@ from .views import RequestViewSet
 
 
 urlpatterns = [
-    path('', RequestViewSet.as_view({'post': 'create'}), name='sent_request'),
-    path('accept/', RequestViewSet.as_view({'post': 'accept'}), name='accept_request'),
-    path('reject/', RequestViewSet.as_view({'post': 'reject'}), name='reject_request'),
-    path('outgoing/', RequestViewSet.as_view({'get': 'outgoing'}), name='outgoing_request'),
-    path('incoming/', RequestViewSet.as_view({'get': 'incoming'}), name='incoming_request'),
+    path('request/', RequestViewSet.as_view({'post': 'create'}), name='sent_request'),
+    path('request/accept/', RequestViewSet.as_view({'post': 'accept'}), name='accept_request'),
+    path('request/reject/', RequestViewSet.as_view({'post': 'reject'}), name='reject_request'),
+    path('request/outgoing/', RequestViewSet.as_view({'get': 'outgoing'}), name='outgoing_request'),
+    path('request/incoming/', RequestViewSet.as_view({'get': 'incoming'}), name='incoming_request'),
+    path('friend/', FriendViewSet.as_view({'get': 'get_list'}), name='friend_list')
 ]
