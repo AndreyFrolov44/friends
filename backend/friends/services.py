@@ -3,6 +3,7 @@ from rest_framework.response import Response
 
 from users.models import User
 from .models import RequestFriend, Friend
+from .serializers import RequestOutgoingSerialiser, RequestIncomingSerialiser
 
 
 class RequestFriendServise:
@@ -19,13 +20,42 @@ class RequestFriendServise:
 
         if reverse_request.first():
             reverse_request.delete()
-            print(from_user.id)
-            print(to_user.id)
             return FriendService.create(user=from_user, new_friend=to_user)
 
         request = RequestFriend(from_user=from_user, to_user=to_user)
         request.save()
         return Response({"status": "ok"}, status=status.HTTP_201_CREATED)
+    
+    @staticmethod
+    def accept(current_user: User, from_user: User) -> Response:
+        if not RequestFriend.objects.filter(from_user=from_user, to_user=current_user).exists():
+            return Response({'detail': 'This user has not sent you a friend request'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        sent_request = RequestFriend.objects.filter(from_user=from_user, to_user=current_user)
+        sent_request.delete()
+
+        return FriendService.create(user=current_user, new_friend=from_user)
+    
+    @staticmethod
+    def reject(current_user: User, from_user: User) -> Response:
+        if not RequestFriend.objects.filter(from_user=from_user, to_user=current_user).exists():
+            return Response({'detail': 'This user has not sent you a friend request'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        sent_request = RequestFriend.objects.filter(from_user=from_user, to_user=current_user)
+        sent_request.update(is_canceled=True)
+
+        return Response({"status": "ok"}, status=status.HTTP_200_OK)
+    
+    @staticmethod
+    def outgoing(user: User) -> Response:
+        serializer = RequestOutgoingSerialiser(RequestFriend.objects.filter(from_user=user), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @staticmethod
+    def incoming(user: User) -> Response:
+        serializer = RequestIncomingSerialiser(RequestFriend.objects.filter(to_user=user), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     
 
 class FriendService:
