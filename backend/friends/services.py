@@ -1,9 +1,19 @@
+import enum
 from rest_framework import status
 from rest_framework.response import Response
 
 from users.models import User
+from users.serializers import UserSerializer
 from .models import RequestFriend, Friend
 from .serializers import RequestOutgoingSerialiser, RequestIncomingSerialiser
+
+
+class StatusEnum(enum.Enum):
+    none = None
+    incoming_request = 'Incoming request'
+    outgoing_request = 'Outgoing request'
+    friends = 'Friends'
+
 
 
 class RequestFriendServise:
@@ -55,6 +65,17 @@ class RequestFriendServise:
     def incoming(user: User) -> Response:
         serializer = RequestIncomingSerialiser(RequestFriend.objects.filter(to_user=user), many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @staticmethod
+    def status(current_user: User, user: User) -> StatusEnum:
+        print(RequestFriend.objects.filter(from_user=current_user, to_user=user))
+        print(RequestFriend.objects.filter(from_user=user, to_user=current_user))
+        if RequestFriend.objects.filter(from_user=current_user, to_user=user).exists():
+            return StatusEnum.outgoing_request
+        elif RequestFriend.objects.filter(from_user=user, to_user=current_user).exists():
+            return StatusEnum.incoming_request
+        else:
+            return StatusEnum.none
 
     
 
@@ -71,3 +92,14 @@ class FriendService:
         new_f.friends.add(user)
 
         return Response({"status": "ok"}, status=status.HTTP_201_CREATED)
+    
+    @staticmethod
+    def get_list(user: User) -> Response:
+        serializer = UserSerializer(user.friend.friends.all(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @staticmethod
+    def status(current_user: User, user: User) -> StatusEnum:
+        if current_user.friend.friends.filter(id=user.id).exists():
+            return StatusEnum.friends
+        return StatusEnum.none

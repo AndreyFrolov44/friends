@@ -21,7 +21,7 @@ class RequestIncomingSerialiser(serializers.ModelSerializer):
         fields = ('id', 'from_user', 'is_canceled')
 
 
-class RequestSentSerializer(serializers.Serializer):
+class UsernameSerializer(serializers.Serializer):
     username = serializers.CharField()
 
     
