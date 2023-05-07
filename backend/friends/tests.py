@@ -38,25 +38,25 @@ class FriendTest(APITestCase):
         response = self.jack_sent_tom()
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(json.loads(response.content), {"status": "ok"})
+        self.assertEqual(json.loads(response.content), {'status': 'ok'})
 
     def test_sent_request_error_already_sent(self):
         response = self.jack_sent_tom()
         response = self.client.post(reverse('sent_request'), data={'username': 'tom'})
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(json.loads(response.content), {"detail": "Request already sent"})
+        self.assertEqual(json.loads(response.content), {'detail': 'Request already sent'})
 
     def test_sent_success_reverse(self):
         response = self.tom_sent_jack()
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(json.loads(response.content), {"status": "ok"})
+        self.assertEqual(json.loads(response.content), {'status': 'ok'})
 
         response = self.jack_sent_tom()
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(json.loads(response.content), {"status": "ok"})
+        self.assertEqual(json.loads(response.content), {'status': 'ok'})
 
         self.assertEqual(RequestFriend.objects.count(), 0)
         self.assertEqual(self.jack.friend.friends.count(), 1)
@@ -75,7 +75,7 @@ class FriendTest(APITestCase):
         self.client.force_authenticate(self.tom)
         response = self.client.post(reverse('accept_request'), data={'username': 'jack'})
 
-        self.assertEqual(json.loads(response.content), {"status": "ok"})
+        self.assertEqual(json.loads(response.content), {'status': 'ok'})
 
         self.assertEqual(RequestFriend.objects.count(), 0)
         self.assertEqual(self.jack.friend.friends.count(), 1)
@@ -174,7 +174,7 @@ class FriendTest(APITestCase):
         response = self.client.delete(reverse('friend_delete'), data={'username': 'jack'})
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(json.loads(response.content), {"detail": "You are not friends"})
+        self.assertEqual(json.loads(response.content), {'detail': 'You are not friends'})
 
     def test_delete_error(self):
         self.tom_sent_jack()

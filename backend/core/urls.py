@@ -24,10 +24,10 @@ urlpatterns = [
     path('auth/', include('users.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('api/v1/friends/', include('friends.urls')),
-    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path(
-        "docs/",
-        SpectacularSwaggerView.as_view(url_name="schema"),
-        name="swagger-ui",
+        'docs/',
+        SpectacularSwaggerView.as_view(url_name='schema'),
+        name='swagger-ui',
     ),
 ]
