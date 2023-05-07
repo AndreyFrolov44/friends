@@ -168,3 +168,22 @@ class FriendTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(json.loads(response.content), {'status': 'Friends'})
+
+    def test_delete_error(self):
+        self.client.force_authenticate(self.tom)
+        response = self.client.delete(reverse('friend_delete'), data={'username': 'jack'})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(json.loads(response.content), {"detail": "You are not friends"})
+
+    def test_delete_error(self):
+        self.tom_sent_jack()
+        self.jack_sent_tom()
+
+        self.client.force_authenticate(self.tom)
+        response = self.client.delete(reverse('friend_delete'), data={'username': 'jack'})
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(self.jack.friend.friends.count(), 0)
+        self.assertEqual(self.tom.friend.friends.count(), 0)
+
