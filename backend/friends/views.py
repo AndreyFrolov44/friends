@@ -100,7 +100,7 @@ class FriendViewSet(ViewSet):
         return FriendService.get_list(user=request.user)
     
     @extend_schema(
-        request=UsernameSerializer,
+        parameters=[OpenApiParameter(name='username', required=True, type=str)],
         description='Delete friend',
         responses={
             204: None,
