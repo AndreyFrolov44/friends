@@ -55,7 +55,7 @@ class FriendViewSet(ViewSet):
 
 @api_view()
 def get_status(request: Request) -> Response:
-    serializer = UsernameSerializer(data=request.data)
+    serializer = UsernameSerializer(data=request.query_params)
     serializer.is_valid(raise_exception=True)
 
     user = get_object_or_404(User, ~Q(id=request.user.id), username=serializer.data['username'])
