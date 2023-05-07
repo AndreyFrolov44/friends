@@ -1,7 +1,7 @@
 from django.urls import path
-
-from rest_framework.authtoken.views import obtain_auth_token
+from djoser.views import UserViewSet
 
 urlpatterns = [
-    path('token/', obtain_auth_token),
+    path('users/', UserViewSet.as_view({'get': 'list', 'post': 'create'}), name='user-list'),
+    path('users/me/', UserViewSet.as_view({'get': 'me'}), name='user-me'),
 ]
