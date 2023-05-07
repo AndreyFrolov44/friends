@@ -9,7 +9,6 @@ urlpatterns = [
     path('request/reject/', RequestViewSet.as_view({'post': 'reject'}), name='reject_request'),
     path('request/outgoing/', RequestViewSet.as_view({'get': 'outgoing'}), name='outgoing_request'),
     path('request/incoming/', RequestViewSet.as_view({'get': 'incoming'}), name='incoming_request'),
-    path('delete/', FriendViewSet.as_view({'delete': 'delete'}), name='friend_delete'),
     path('status/', get_status, name='status'),
-    path('', FriendViewSet.as_view({'get': 'get_list'}), name='friend_list'),
+    path('', FriendViewSet.as_view({'get': 'get_list', 'delete': 'delete'}), name='friend'),
 ]
