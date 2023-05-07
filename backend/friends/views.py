@@ -52,6 +52,14 @@ class FriendViewSet(ViewSet):
     def get_list(self, request: Request) -> Response:
         return FriendService.get_list(user=request.user)
     
+    def delete(self, request: Request) -> Response:
+        serializer = UsernameSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = get_object_or_404(User, ~Q(id=request.user.id), username=serializer.data['username'])
+
+        return FriendService.delete(current_user=request.user, user=user)
+    
 
 @api_view()
 def get_status(request: Request) -> Response:

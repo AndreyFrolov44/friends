@@ -101,3 +101,14 @@ class FriendService:
         if current_user.friend.friends.filter(id=user.id).exists():
             return StatusEnum.friends
         return StatusEnum.none
+    
+    @staticmethod
+    def delete(current_user: User, user: User) -> Response:
+        friend = current_user.friend.friends.filter(id=user.id)
+        if not friend.exists():
+            return Response({"detail": "You are not friends"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        current_user.friend.friends.remove(user)
+        user.friend.friends.remove(current_user)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
