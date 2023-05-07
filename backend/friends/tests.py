@@ -133,3 +133,38 @@ class FriendTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(json.loads(response.content), [UserSerializer(self.jack).data])
+
+    def test_status(self):
+        self.client.force_authenticate(self.tom)
+        response = self.client.get(reverse('status'), data={'username': 'jack'})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(json.loads(response.content), {'status': None})
+
+        self.jack_sent_tom()
+
+        self.client.force_authenticate(self.tom)
+        response = self.client.get(reverse('status'), data={'username': 'jack'})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(json.loads(response.content), {'status': 'Incoming request'})
+
+        self.client.force_authenticate(self.jack)
+        response = self.client.get(reverse('status'), data={'username': 'tom'})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(json.loads(response.content), {'status': 'Outgoing request'})
+
+        self.tom_sent_jack()
+
+        self.client.force_authenticate(self.jack)
+        response = self.client.get(reverse('status'), data={'username': 'tom'})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(json.loads(response.content), {'status': 'Friends'})
+
+        self.client.force_authenticate(self.tom)
+        response = self.client.get(reverse('status'), data={'username': 'jack'})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(json.loads(response.content), {'status': 'Friends'})
