@@ -68,8 +68,6 @@ class RequestFriendServise:
     
     @staticmethod
     def status(current_user: User, user: User) -> StatusEnum:
-        print(RequestFriend.objects.filter(from_user=current_user, to_user=user))
-        print(RequestFriend.objects.filter(from_user=user, to_user=current_user))
         if RequestFriend.objects.filter(from_user=current_user, to_user=user).exists():
             return StatusEnum.outgoing_request
         elif RequestFriend.objects.filter(from_user=user, to_user=current_user).exists():
