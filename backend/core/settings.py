@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+    'drf_spectacular',
 
     'users.apps.UsersConfig',
     'friends.apps.FriendsConfig'
@@ -50,6 +51,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema"
 }
 
 SIMPLE_JWT = {
@@ -57,7 +59,14 @@ SIMPLE_JWT = {
 }
 
 DJOSER = {
-    'TOKEN_MODEL': None
+    'TOKEN_MODEL': None,
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Friends API',
+    'DESCRIPTION': 'Friends service api',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 MIDDLEWARE = [
